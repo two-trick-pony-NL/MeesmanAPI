@@ -1,9 +1,29 @@
 import requests
 from bs4 import BeautifulSoup
+import re
+from datetime import datetime, timedelta
+
+def refresh_session_if_needed(method):
+    def wrapper(self, *args, **kwargs):
+        print("Time in session: ", datetime.now() -self.session_created_at)
+        # Check if the session is older than 10 minutes
+        if (datetime.now() - self.session_created_at) > timedelta(minutes=2):
+            # If it is, refresh the session
+            self.session = self._get_session(self.username, self.password)
+            self.session_created_at = datetime.now()
+            print("refreshing session")
+
+        # Call the original method
+        return method(self, *args, **kwargs)
+
+    return wrapper
 
 class MeesmanClient:
-    def __init__(self, username, password):
+    def __init__(self, username, password):        
         self.session = self._get_session(username, password)
+        self.session_created_at = datetime.now()
+        self.username = username
+        self.password = password
 
     def _get_session(self, username, password):
         url_login = "https://mijn.meesman.nl/login"
@@ -29,11 +49,12 @@ class MeesmanClient:
 
         # Check if login was successful based on the presence of a specific element
         if "accountOverviewTable" not in response.text:
-            print("Login failed. Check your credentials.")
+            print("Login to Meesman failed. Check your credentials.")
             return None
-        
+                
         return session
-
+    
+    @refresh_session_if_needed
     def get_accounts(self):
         # Use the session to fetch the data from the authenticated page
         url = "https://mijn.meesman.nl"
@@ -67,6 +88,48 @@ class MeesmanClient:
 
         return data_rows
     
+    @refresh_session_if_needed
+    def get_portefeuille(self):
+        # Use the session to fetch the data from the authenticated page
+        url = "https://mijn.meesman.nl/portefeuille"
+        response = self.session.get(url)
+        
+        # Check if the request was successful
+        if response.status_code != 200:
+            print(f"Failed to fetch data. Status code: {response.status_code}")
+            return None
+
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find the table with class 'PortfolioTable'
+        table = soup.find('table', class_='PortfolioTable')
+
+        # Extract data rows for the specific funds
+        specific_funds = []
+
+        for row in table.find_all('tr', class_='actual-data'):
+            # Extract the values from the row
+            fund = row.find('td', class_='name').text.strip()
+            if fund in ['Aandelen Wereldwijd Totaal', 'Obligaties Wereldwijd (wordt gesloten)']:
+                aantal = row.find('td', {'data-th': 'Aantal'}).text.strip()
+                koers = row.find('td', {'data-th': 'Koers'}).text.strip()
+                datum = row.find('td', {'data-th': 'Valutadatum'}).text.strip()
+                waarde = row.find('td', {'data-th': 'Waarde'}).text.strip()
+                actuele_weging = row.find('td', {'data-th': 'Actuele weging'}).text.strip()
+
+                # Append the values to the specific_funds list
+                specific_funds.append({
+                    'fund': fund,
+                    'aantal': aantal,
+                    'koers': koers,
+                    'datum': datum,
+                    'waarde': waarde,
+                    'actuele_weging': actuele_weging
+                })
+        return specific_funds
+      
+    @refresh_session_if_needed  
     def get_resultaten(self):
         # Use the session to fetch the data from the authenticated page
         url = "https://mijn.meesman.nl/resultaten"
@@ -102,3 +165,60 @@ class MeesmanClient:
             })
 
         return data_rows
+    
+    @refresh_session_if_needed
+    def get_historic_value(self):
+        url = "https://mijn.meesman.nl/waardeontwikkeling"
+        response = self.session.get(url)
+
+        # Check if the request was successful
+        if response.status_code != 200:
+            return f"Failed to fetch data. Status code: {response.status_code}"
+
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+        script_tag = soup.find('script', text=re.compile(r'var Chart = new PortfolioChart\(\);'))
+
+        # Extract the script content
+        script_content = script_tag.text if script_tag else None
+
+        # Use regex to extract the list of historic values
+        match = re.search(r'\[\[.*?\]\]\s*,\s*\[\[.*?\]\]', script_tag.text) if script_tag else None
+        historic_values_list = eval(match.group()) if match else None
+
+        return historic_values_list
+    
+    @refresh_session_if_needed
+    def get_waarde_ontwikkeling(self):
+        # Use the session to fetch the data from the authenticated page
+        url = "https://mijn.meesman.nl/waardeontwikkeling"
+        response = self.session.get(url)
+
+        # Check if the request was successful
+        if response.status_code != 200:
+            return f"Failed to fetch data. Status code: {response.status_code}"
+
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find all tables with the specified class
+        tables = soup.find_all('table', class_='meesmantable PortfolioResultTable__content')
+
+        result = []
+
+        for table in tables[1:]:
+            table_data = {"columns": [], "data": []}
+
+            # Extract column names
+            columns = [th.text.strip() for th in table.select('thead th.PortfolioResultTable__headTitle')]
+            table_data["columns"] = columns
+
+            # Extract row data
+            rows = table.select('tbody tr.actual-data')
+            for row in rows:
+                row_data = [td.text.strip() for td in row.find_all('td')]
+                table_data["data"].append(row_data)
+
+            result.append(table_data)
+
+        return(result)
