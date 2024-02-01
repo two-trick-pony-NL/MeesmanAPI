@@ -1,5 +1,5 @@
 # Meesman API
-This is a Python API wrapper for the Meesman investment platform. The basic idea is to be able to fetch your account details programatically. 
+This is a Python API wrapper for the Meesman Indexbeleggen platform. The basic idea is to be able to fetch your account details programatically. 
 
 You'll be able to fetch the following information: 
 - Accounts: Lists your accounts, balance and labels
