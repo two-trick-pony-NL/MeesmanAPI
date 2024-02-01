@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from meesmanwrapper import MeesmanClient
 from fastapi.security import APIKeyHeader
 from dotenv import load_dotenv
+
+
 import os
 
 load_dotenv()
@@ -11,6 +13,8 @@ password = os.getenv("MEESMAN_PASSWORD")
 # Define API key header
 API_KEY = os.getenv("API_KEY")
 api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
+
+
 
 # Dependency to validate API key
 async def get_api_key(api_key: str = Depends(api_key_header)):
@@ -31,6 +35,8 @@ app = FastAPI(
     description="API wrapper for Meesman, providing endpoints to access account information, results, portfolio, historic data, and asset value development.",
     version="1.0",
 )
+
+
 @app.get("/")
 def root():
     """
