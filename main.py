@@ -1,17 +1,19 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from meesmanwrapper import MeesmanClient
 from fastapi.security import APIKeyHeader
-from dotenv import load_dotenv
-
-
+from mangum import Mangum
+from constants import API_KEY, MEESMAN_PASSWORD, MEESMAN_USERNAME
 import os
 
-load_dotenv()
-username = os.getenv("MEESMAN_USERNAME")
-password = os.getenv("MEESMAN_PASSWORD")
+username = MEESMAN_USERNAME
+password = MEESMAN_PASSWORD
+
+api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
+
+
 
 # Define API key header
-API_KEY = os.getenv("API_KEY")
+API_KEY = os.environ.get("API_KEY")
 api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
 
 
@@ -83,3 +85,6 @@ def waardeontwikkeling(api_key: str = Depends(get_api_key)):
     """
     data = meesman_client.get_waarde_ontwikkeling()
     return {"waardeontwikkeling": data}
+
+
+handler = Mangum(app)

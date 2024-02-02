@@ -1,7 +1,7 @@
-import requests
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime, timedelta
+import lambda_requests as requests
 
 def refresh_session_if_needed(method):
     def wrapper(self, *args, **kwargs):

@@ -9,23 +9,30 @@ You'll be able to fetch the following information:
 - Value development: How your balance grew year over year
 
 ## How to run
-1. The project revolves around FastAPI. When calling endpoints we scrape the Meesman Website to extract data and return that in JSON format. 
-2. So install the `requirements.txt` file to get dependancies
-3. Create a `.env` file in the root with the following structure: 
+1. Check  this URL for installation instructions: https://ademoverflow.com/blog/tutorial-fastapi-aws-lambda-serverless/ 
+2. Once all permissions are set you can simply hit
+To update
 ```
-MEESMAN_USERNAME='youremail@address.com'
-MEESMAN_PASSWORD='meesmanpassword'
-API_KEY='yourpasswordfortheapi'
+sls deploy --stage staging
 ```
-4. run `uvicorn main:app` this will start the server on port 8000
-The API_KEY you set in your environment will be the password to make API calls. This ensures not everyone can see your balance. 
+
+To delete
+```
+sls remove --stage staging
+```
+
+See context: https://ademoverflow.com/blog/tutorial-fastapi-aws-lambda-serverless/ 
+```
+
+For development you can run
+4. run `uvicorn main:app --reload` this will start the server on port 8000 locally
 
 ## To do
 - If you have multiple accounts I do not yet scrape all the data for those accounts. 
 
 ## Disclaimer
 
-**I am not affiliated with Messman**
+**I am not affiliated with Meesman**
 I'm just a customer that wants to see my investments from an app and thus needed an API. 
 
 **Use at Your Own Risk:**

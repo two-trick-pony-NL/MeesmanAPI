@@ -1,0 +1,67 @@
+service: MeesmanAPIWrapper
+
+package:
+  individually: true
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: eu-central-1
+  stage: ${opt:stage, "dev"}
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    layer:
+      name: meesman-api-wrapper
+      description: Meesman API Wrapper
+      compatibleRuntimes:
+        - python3.8
+
+functions:
+  app:
+    package:
+      include:
+        - "main.py"
+        - "meesmanwrapper.py"
+        - "constants.py"
+      exclude:
+        - "requirements.txt"
+        - "package.json"
+        - "package-lock.json"
+        - ".serverless/**"
+        - ".virtualenv/**"
+        - "node_modules/**"
+
+    handler: main.handler
+    environment:
+      STAGE: ${self:provider.stage}
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          method: any
+          path: /
+      - http:
+          method: any
+          path: /accounts
+      - http:
+          method: any
+          path: /resultaten
+      - http:
+          method: any
+          path: /portefeuille
+      - http:
+          method: any
+          path: /historic_data
+      - http:
+          method: any
+          path: /waardeontwikkeling
+      - http:
+          method: any
+          path: /docs
