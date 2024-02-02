@@ -1,5 +1,5 @@
 # Meesman API
-This is a Python API wrapper for the Meesman Indexbeleggen platform. The basic idea is to be able to fetch your account details programatically. 
+This is a Python API wrapper for the Meesman Indexbeleggen platform. The basic idea is to be able to fetch your account details programatically. We run this from AWS Lambda functions as the app hardly ever needs to refresh as Meesman only invests 1x per week. 
 
 You'll be able to fetch the following information: 
 - Accounts: Lists your accounts, balance and labels
@@ -21,14 +21,12 @@ To delete
 sls remove --stage staging
 ```
 
-See context: https://ademoverflow.com/blog/tutorial-fastapi-aws-lambda-serverless/ 
-```
-
 For development you can run
-4. run `uvicorn main:app --reload` this will start the server on port 8000 locally
+3. run `uvicorn main:app --reload` this will start the server on port 8000 locally for development. 
 
 ## To do
 - If you have multiple accounts I do not yet scrape all the data for those accounts. 
+- Create a nice frontend app. 
 
 ## Disclaimer
 
