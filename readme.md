@@ -9,7 +9,7 @@ You'll be able to fetch the following information:
 - Value development: How your balance grew year over year
 
 ## How to run
-1. The project revolves around FastAPI
+1. The project revolves around FastAPI. When calling endpoints we scrape the Meesman Website to extract data and return that in JSON format. 
 2. So install the `requirements.txt` file to get dependancies
 3. Create a `.env` file in the root with the following structure: 
 ```
