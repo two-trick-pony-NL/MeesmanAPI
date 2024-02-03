@@ -86,5 +86,16 @@ def waardeontwikkeling(api_key: str = Depends(get_api_key)):
     data = meesman_client.get_waarde_ontwikkeling()
     return {"waardeontwikkeling": data}
 
+@app.get("/combined")
+def combined(api_key: str = Depends(get_api_key)):
+    result = {
+        'waardeontwikkeling': meesman_client.get_waarde_ontwikkeling(),
+        'historic_data': meesman_client.get_historic_value(),
+        'portefeuille': meesman_client.get_portefeuille(),
+        'resultaten': meesman_client.get_resultaten(),
+        'accounts':meesman_client.get_accounts(),
+    }
+    return result
+
 
 handler = Mangum(app)

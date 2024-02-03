@@ -64,4 +64,4 @@ functions:
           path: /waardeontwikkeling
       - http:
           method: any
-          path: /docs
+          path: /combined
