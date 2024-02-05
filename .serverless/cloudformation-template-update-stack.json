@@ -178,7 +178,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/prod/1707151243785-2024-02-05T16:40:43.785Z/app.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/prod/1707151379649-2024-02-05T16:42:59.649Z/app.zip"
         },
         "Handler": "main.handler",
         "Runtime": "python3.8",
@@ -206,14 +206,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionnlHTmXrSFRFnKbiQkzvLDPt9ncPTmFEvtMx16HtT4": {
+    "AppLambdaVersionQ5rZlRMvirFRzybvUXP3pqXghCD1JXH0MWM4QPXwag": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "f+R+IsLcndkgHGDyGm35LtF26LpezNRwjseupqpg7BM="
+        "CodeSha256": "O+rsmLzudWYnEdwXzs5ycLXmnYCKB1mYpYzJE1wsqH8="
       }
     },
     "ApiGatewayRestApi": {
@@ -338,7 +338,7 @@
         "AppLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1707151241956": {
+    "ApiGatewayDeployment1707151378062": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -424,7 +424,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionnlHTmXrSFRFnKbiQkzvLDPt9ncPTmFEvtMx16HtT4"
+        "Ref": "AppLambdaVersionQ5rZlRMvirFRzybvUXP3pqXghCD1JXH0MWM4QPXwag"
       },
       "Export": {
         "Name": "sls-MeesmanAPIWrapper-prod-AppLambdaFunctionQualifiedArn"

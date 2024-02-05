@@ -35,6 +35,7 @@ def meesman(
             'accounts': session.get_accounts(),
         }
         print("Found user: ", username, " retrieving their data from Meesman")
+        print("Returning result:")
         return result
     except Exception as e:
         print("User not found:")
