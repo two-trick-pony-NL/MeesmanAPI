@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Response, Header, status
+from fastapi import FastAPI, HTTPException, Header
 from meesmanwrapper import MeesmanClient
 from mangum import Mangum
 import os
