@@ -1,6 +1,5 @@
-from fastapi import FastAPI, HTTPException, status, Header
+from fastapi import FastAPI, HTTPException, Response, Header, status
 from meesmanwrapper import MeesmanClient
-from fastapi.security import APIKeyHeader
 from mangum import Mangum
 import os
 
@@ -22,7 +21,7 @@ def root():
 @app.get("/")
 def meesman(
     username: str = Header(..., convert_underscores=False),
-    password: str = Header(..., convert_underscores=False)
+    password: str = Header(..., convert_underscores=False),
     ):
     print(username)
     print(password)
