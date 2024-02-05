@@ -16,6 +16,7 @@ def root():
     """
     Root endpoint to check if the API is up and running.
     """
+    print("Healthcheck ran")
     return "Up and running"
 
 @app.get("/")
@@ -23,8 +24,7 @@ def meesman(
     username: str = Header(..., convert_underscores=False),
     password: str = Header(..., convert_underscores=False),
     ):
-    print(username)
-    print(password)
+    print("New request came in...")
     try:
         session = MeesmanClient(password=password, username=username)
         result = {
@@ -34,8 +34,10 @@ def meesman(
             'resultaten': session.get_resultaten(),
             'accounts': session.get_accounts(),
         }
+        print("Found user: ", username, " retrieving their data from Meesman")
         return result
     except Exception as e:
+        print("User not found:")
         print(e)
         return HTTPException(status_code=401, detail="Incorrect password or username")
 

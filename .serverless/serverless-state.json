@@ -190,7 +190,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z/app.zip"
+                "S3Key": "serverless/MeesmanAPIWrapper/prod/1707151243785-2024-02-05T16:40:43.785Z/app.zip"
               },
               "Handler": "main.handler",
               "Runtime": "python3.8",
@@ -218,14 +218,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionSkKfjTUT7wbhbfNTtaB4lKQgJpShpqS9UCHrLqpSGsE": {
+          "AppLambdaVersionnlHTmXrSFRFnKbiQkzvLDPt9ncPTmFEvtMx16HtT4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "HmPksc20M2UKADwnb9J1WfAhFSzmQAG5Oego6O7Ubd4="
+              "CodeSha256": "f+R+IsLcndkgHGDyGm35LtF26LpezNRwjseupqpg7BM="
             }
           },
           "ApiGatewayRestApi": {
@@ -350,7 +350,7 @@
               "AppLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1707148329153": {
+          "ApiGatewayDeployment1707151241956": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -436,7 +436,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionSkKfjTUT7wbhbfNTtaB4lKQgJpShpqS9UCHrLqpSGsE"
+              "Ref": "AppLambdaVersionnlHTmXrSFRFnKbiQkzvLDPt9ncPTmFEvtMx16HtT4"
             },
             "Export": {
               "Name": "sls-MeesmanAPIWrapper-prod-AppLambdaFunctionQualifiedArn"
@@ -621,7 +621,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionSkKfjTUT7wbhbfNTtaB4lKQgJpShpqS9UCHrLqpSGsE"
+        "versionLogicalId": "AppLambdaVersionnlHTmXrSFRFnKbiQkzvLDPt9ncPTmFEvtMx16HtT4"
       }
     },
     "configValidationMode": "warn",
@@ -631,7 +631,7 @@
       "package": {
         "individually": true,
         "artifactsS3KeyDirname": "serverless/MeesmanAPIWrapper/prod/code-artifacts",
-        "artifactDirectoryName": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z"
+        "artifactDirectoryName": "serverless/MeesmanAPIWrapper/prod/1707151243785-2024-02-05T16:40:43.785Z"
       },
       "useDotenv": true,
       "provider": {
@@ -655,14 +655,15 @@
         "compatibleRuntimes": {
           "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"PythonRequirementsLambdaLayer\"][\"Properties\"][\"CompatibleRuntimes\"]"
         },
-        "package": {}
+        "package": {},
+        "artifactAlreadyUploaded": true
       }
     },
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
     "individually": true,
-    "artifactDirectoryName": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z",
+    "artifactDirectoryName": "serverless/MeesmanAPIWrapper/prod/1707151243785-2024-02-05T16:40:43.785Z",
     "artifact": ""
   }
 }
