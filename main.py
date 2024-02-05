@@ -1,101 +1,45 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Header
 from meesmanwrapper import MeesmanClient
 from fastapi.security import APIKeyHeader
 from mangum import Mangum
-from constants import API_KEY, MEESMAN_PASSWORD, MEESMAN_USERNAME
 import os
 
-username = MEESMAN_USERNAME
-password = MEESMAN_PASSWORD
-
-api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
-
-
-
-# Define API key header
-API_KEY = os.environ.get("API_KEY")
-api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
-
-
-
-# Dependency to validate API key
-async def get_api_key(api_key: str = Depends(api_key_header)):
-    if api_key == API_KEY:
-        return api_key
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid API key",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-# A class that creates a session for
-meesman_client = MeesmanClient(username, password)
 
 app = FastAPI(
     title="Meesman API Wrapper",
-    description="API wrapper for Meesman, providing endpoints to access account information, results, portfolio, historic data, and asset value development.",
+    description="API wrapper for Meesman, providing endpoints to access account information.",
     version="1.0",
 )
 
 
-@app.get("/")
+@app.get("/healthcheck")
 def root():
     """
     Root endpoint to check if the API is up and running.
     """
     return "Up and running"
 
-@app.get("/accounts")
-def accounts(api_key: str = Depends(get_api_key)):
-    """
-    Get a list of accounts from Meesman.
-    """
-    accounts = meesman_client.get_accounts()
-    return {"accounts": accounts}
+@app.get("/")
+def meesman(
+    username: str = Header(..., convert_underscores=False),
+    password: str = Header(..., convert_underscores=False)
+    ):
+    print(username)
+    print(password)
+    try:
+        session = MeesmanClient(password=password, username=username)
+        result = {
+            'waardeontwikkeling': session.get_waarde_ontwikkeling(),
+            'historic_data': session.get_historic_value(),
+            'portefeuille': session.get_portefeuille(),
+            'resultaten': session.get_resultaten(),
+            'accounts': session.get_accounts(),
+        }
+        return result
+    except Exception as e:
+        print(e)
+        return HTTPException(status_code=401, detail="Incorrect password or username")
 
-@app.get("/resultaten")
-def resultaten(api_key: str = Depends(get_api_key)):
-    """
-    Get result data from Meesman.
-    """
-    resultaten = meesman_client.get_resultaten()
-    return {"resultaten": resultaten}
-
-@app.get("/portefeuille")
-def portfolio(api_key: str = Depends(get_api_key)):
-    """
-    Get portfolio data from Meesman.
-    """
-    portefeuille = meesman_client.get_portefeuille()
-    return {"portefeuille": portefeuille}
-
-@app.get("/historic_data")
-def historic_data(api_key: str = Depends(get_api_key)):
-    """
-    Get historic data from Meesman.
-    """
-    data = meesman_client.get_historic_value()
-    return {"historic_data": data}
-
-@app.get("/waardeontwikkeling")
-def waardeontwikkeling(api_key: str = Depends(get_api_key)):
-    """
-    Get development of asset value over time from Meesman.
-    """
-    data = meesman_client.get_waarde_ontwikkeling()
-    return {"waardeontwikkeling": data}
-
-@app.get("/combined")
-def combined(api_key: str = Depends(get_api_key)):
-    result = {
-        'waardeontwikkeling': meesman_client.get_waarde_ontwikkeling(),
-        'historic_data': meesman_client.get_historic_value(),
-        'portefeuille': meesman_client.get_portefeuille(),
-        'resultaten': meesman_client.get_resultaten(),
-        'accounts':meesman_client.get_accounts(),
-    }
-    return result
 
 
 handler = Mangum(app)

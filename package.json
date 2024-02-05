@@ -4,5 +4,8 @@
     "author": "Peter van Doorn",
     "dependencies": {
         "serverless-python-requirements": "^5.0.1"
+    },
+    "devDependencies": {
+        "serverless-api-gateway-throttling": "^2.0.3"
     }
 }

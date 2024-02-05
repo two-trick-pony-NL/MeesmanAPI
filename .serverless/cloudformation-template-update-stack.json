@@ -74,7 +74,7 @@
     "AppLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/MeesmanAPIWrapper-dev-app"
+        "LogGroupName": "/aws/lambda/MeesmanAPIWrapper-prod-app"
       }
     },
     "IamRoleLambdaExecution": {
@@ -103,7 +103,7 @@
                 "-",
                 [
                   "MeesmanAPIWrapper",
-                  "dev",
+                  "prod",
                   "lambda"
                 ]
               ]
@@ -120,7 +120,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-prod*:*"
                     }
                   ]
                 },
@@ -131,7 +131,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-prod*:*:*"
                     }
                   ]
                 }
@@ -145,7 +145,7 @@
             "-",
             [
               "MeesmanAPIWrapper",
-              "dev",
+              "prod",
               {
                 "Ref": "AWS::Region"
               },
@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/dev/1706889871214-2024-02-02T16:04:31.214Z/pythonRequirements.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z/pythonRequirements.zip"
         },
         "LayerName": "meesman-api-wrapper",
         "Description": "Meesman API Wrapper",
@@ -178,16 +178,16 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/dev/1706912377315-2024-02-02T22:19:37.315Z/app.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z/app.zip"
         },
         "Handler": "main.handler",
         "Runtime": "python3.8",
-        "FunctionName": "MeesmanAPIWrapper-dev-app",
+        "FunctionName": "MeesmanAPIWrapper-prod-app",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "dev"
+            "STAGE": "prod"
           }
         },
         "Role": {
@@ -206,20 +206,20 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersion7pALmMtyWEGV2zcf0fseOh8ebOsQP8kQ57tOYgsVM": {
+    "AppLambdaVersionSkKfjTUT7wbhbfNTtaB4lKQgJpShpqS9UCHrLqpSGsE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "5DJeOTxncNB2GTKvB224/oislHDIJPksW2IkfGiFfEg="
+        "CodeSha256": "HmPksc20M2UKADwnb9J1WfAhFSzmQAG5Oego6O7Ubd4="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "dev-MeesmanAPIWrapper",
+        "Name": "prod-MeesmanAPIWrapper",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -228,7 +228,7 @@
         "Policy": ""
       }
     },
-    "ApiGatewayResourceAccounts": {
+    "ApiGatewayResourceHealthcheck": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
@@ -237,86 +237,57 @@
             "RootResourceId"
           ]
         },
-        "PathPart": "accounts",
+        "PathPart": "healthcheck",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayResourceResultaten": {
-      "Type": "AWS::ApiGateway::Resource",
+    "ApiGatewayMethodHealthcheckAny": {
+      "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
+        "HttpMethod": "ANY",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceHealthcheck"
         },
-        "PathPart": "resultaten",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayResourcePortefeuille": {
-      "Type": "AWS::ApiGateway::Resource",
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
         },
-        "PathPart": "portefeuille",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayResourceHistoricdata": {
-      "Type": "AWS::ApiGateway::Resource",
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
         },
-        "PathPart": "historic_data",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayResourceWaardeontwikkeling": {
-      "Type": "AWS::ApiGateway::Resource",
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
-        },
-        "PathPart": "waardeontwikkeling",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayResourceCombined": {
-      "Type": "AWS::ApiGateway::Resource",
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
-        },
-        "PathPart": "combined",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "AppLambdaPermissionApiGateway"
+      ]
     },
     "ApiGatewayMethodAny": {
       "Type": "AWS::ApiGateway::Method",
@@ -367,298 +338,17 @@
         "AppLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayMethodAccountsAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceAccounts"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "AppLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayMethodResultatenAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceResultaten"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "AppLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayMethodPortefeuilleAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourcePortefeuille"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "AppLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayMethodHistoricdataAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceHistoricdata"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "AppLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayMethodWaardeontwikkelingAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceWaardeontwikkeling"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "AppLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayMethodCombinedAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceCombined"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "AppLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayDeployment1706912375646": {
+    "ApiGatewayDeployment1707148329153": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "StageName": "dev"
+        "StageName": "prod"
       },
       "DependsOn": [
-        "ApiGatewayMethodAny",
-        "ApiGatewayMethodAccountsAny",
-        "ApiGatewayMethodResultatenAny",
-        "ApiGatewayMethodPortefeuilleAny",
-        "ApiGatewayMethodHistoricdataAny",
-        "ApiGatewayMethodWaardeontwikkelingAny",
-        "ApiGatewayMethodCombinedAny"
+        "ApiGatewayMethodHealthcheckAny",
+        "ApiGatewayMethodAny"
       ]
     },
     "AppLambdaPermissionApiGateway": {
@@ -705,7 +395,7 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-dev-ServerlessDeploymentBucketName"
+        "Name": "sls-MeesmanAPIWrapper-prod-ServerlessDeploymentBucketName"
       }
     },
     "PythonRequirementsLambdaLayerQualifiedArn": {
@@ -714,30 +404,30 @@
         "Ref": "PythonRequirementsLambdaLayer"
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-dev-PythonRequirementsLambdaLayerQualifiedArn"
+        "Name": "sls-MeesmanAPIWrapper-prod-PythonRequirementsLambdaLayerQualifiedArn"
       }
     },
     "PythonRequirementsLambdaLayerHash": {
       "Description": "Current Lambda layer hash",
       "Value": "994c828dc68d06767024efd089f631b12a672562",
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-dev-PythonRequirementsLambdaLayerHash"
+        "Name": "sls-MeesmanAPIWrapper-prod-PythonRequirementsLambdaLayerHash"
       }
     },
     "PythonRequirementsLambdaLayerS3Key": {
       "Description": "Current Lambda layer S3Key",
-      "Value": "serverless/MeesmanAPIWrapper/dev/1706889871214-2024-02-02T16:04:31.214Z/pythonRequirements.zip",
+      "Value": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z/pythonRequirements.zip",
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-dev-PythonRequirementsLambdaLayerS3Key"
+        "Name": "sls-MeesmanAPIWrapper-prod-PythonRequirementsLambdaLayerS3Key"
       }
     },
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersion7pALmMtyWEGV2zcf0fseOh8ebOsQP8kQ57tOYgsVM"
+        "Ref": "AppLambdaVersionSkKfjTUT7wbhbfNTtaB4lKQgJpShpqS9UCHrLqpSGsE"
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-dev-AppLambdaFunctionQualifiedArn"
+        "Name": "sls-MeesmanAPIWrapper-prod-AppLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -758,12 +448,12 @@
             {
               "Ref": "AWS::URLSuffix"
             },
-            "/dev"
+            "/prod"
           ]
         ]
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-dev-ServiceEndpoint"
+        "Name": "sls-MeesmanAPIWrapper-prod-ServiceEndpoint"
       }
     }
   }

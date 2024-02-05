@@ -1,27 +1,10 @@
 from bs4 import BeautifulSoup
 import re
-from datetime import datetime, timedelta
 import lambda_requests as requests
-
-def refresh_session_if_needed(method):
-    def wrapper(self, *args, **kwargs):
-        print("Time in session: ", datetime.now() -self.session_created_at)
-        # Check if the session is older than 10 minutes
-        if (datetime.now() - self.session_created_at) > timedelta(minutes=2):
-            # If it is, refresh the session
-            self.session = self._get_session(self.username, self.password)
-            self.session_created_at = datetime.now()
-            print("refreshing session")
-
-        # Call the original method
-        return method(self, *args, **kwargs)
-
-    return wrapper
 
 class MeesmanClient:
     def __init__(self, username, password):        
         self.session = self._get_session(username, password)
-        self.session_created_at = datetime.now()
         self.username = username
         self.password = password
 
@@ -54,7 +37,6 @@ class MeesmanClient:
                 
         return session
     
-    @refresh_session_if_needed
     def get_accounts(self):
         # Use the session to fetch the data from the authenticated page
         url = "https://mijn.meesman.nl"
@@ -88,7 +70,6 @@ class MeesmanClient:
 
         return data_rows
     
-    @refresh_session_if_needed
     def get_portefeuille(self):
         # Use the session to fetch the data from the authenticated page
         url = "https://mijn.meesman.nl/portefeuille"
@@ -129,7 +110,6 @@ class MeesmanClient:
                 })
         return specific_funds
       
-    @refresh_session_if_needed  
     def get_resultaten(self):
         # Use the session to fetch the data from the authenticated page
         url = "https://mijn.meesman.nl/resultaten"
@@ -166,7 +146,6 @@ class MeesmanClient:
 
         return data_rows
     
-    @refresh_session_if_needed
     def get_historic_value(self):
         url = "https://mijn.meesman.nl/waardeontwikkeling"
         response = self.session.get(url)
@@ -188,7 +167,6 @@ class MeesmanClient:
 
         return historic_values_list
     
-    @refresh_session_if_needed
     def get_waarde_ontwikkeling(self):
         # Use the session to fetch the data from the authenticated page
         url = "https://mijn.meesman.nl/waardeontwikkeling"

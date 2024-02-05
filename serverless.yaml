@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: python3.8
   region: eu-central-1
-  stage: ${opt:stage, "dev"}
+  stage: ${opt:stage, "prod"}
 
 plugins:
   - serverless-python-requirements
@@ -46,22 +46,14 @@ functions:
     events:
       - http:
           method: any
+          path: /healthcheck
+      - http:
+          method: any
           path: /
-      - http:
-          method: any
-          path: /accounts
-      - http:
-          method: any
-          path: /resultaten
-      - http:
-          method: any
-          path: /portefeuille
-      - http:
-          method: any
-          path: /historic_data
-      - http:
-          method: any
-          path: /waardeontwikkeling
-      - http:
-          method: any
-          path: /combined
+          throttling:  # Throttling configuration for this endpoint
+            burstLimit: 5  # Maximum number of requests that are allowed in a burst
+            rateLimit: 5  # The rate at which requests are allowed per second
+          request:
+            headers:
+              password: true
+              username: true
