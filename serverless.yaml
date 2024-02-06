@@ -25,6 +25,7 @@ custom:
 
 functions:
   app:
+    timeout: 30
     package:
       include:
         - "main.py"

@@ -5,3 +5,4 @@ bs4
 lambda_requests
 jose
 cryptography
+python-multipart
