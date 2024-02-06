@@ -1,5 +1,7 @@
 bs4
+cryptography
 fastapi==0.63.0
+jose
 lambda_requests
 mangum==0.11.0
 uvicorn==0.13.4

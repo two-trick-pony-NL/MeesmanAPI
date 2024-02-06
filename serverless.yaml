@@ -30,6 +30,8 @@ functions:
         - "main.py"
         - "meesmanwrapper.py"
         - "constants.py"
+        - "authentication.py"
+        - "authentication.key"
       exclude:
         - "requirements.txt"
         - "package.json"
@@ -52,8 +54,11 @@ functions:
           path: /combined
       - http:
           method: any
-          path: /
+          path: /getauthtoken
+      - http:
+          method: any
+          path: /getmeesmandata
           request:
-            headers:
-              password: true
-              username: true
+            parameters:
+              querystrings:
+                token: true

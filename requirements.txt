@@ -3,3 +3,5 @@ uvicorn==0.13.4
 mangum==0.11.0
 bs4
 lambda_requests
+jose
+cryptography
