@@ -74,7 +74,7 @@
     "AppLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/MeesmanAPIWrapper-prod-app"
+        "LogGroupName": "/aws/lambda/MeesmanAPIWrapper-dev-app"
       }
     },
     "IamRoleLambdaExecution": {
@@ -103,7 +103,7 @@
                 "-",
                 [
                   "MeesmanAPIWrapper",
-                  "prod",
+                  "dev",
                   "lambda"
                 ]
               ]
@@ -120,7 +120,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-prod*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-dev*:*"
                     }
                   ]
                 },
@@ -131,7 +131,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-prod*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-dev*:*:*"
                     }
                   ]
                 }
@@ -145,7 +145,7 @@
             "-",
             [
               "MeesmanAPIWrapper",
-              "prod",
+              "dev",
               {
                 "Ref": "AWS::Region"
               },
@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z/pythonRequirements.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/dev/1706889871214-2024-02-02T16:04:31.214Z/pythonRequirements.zip"
         },
         "LayerName": "meesman-api-wrapper",
         "Description": "Meesman API Wrapper",
@@ -178,16 +178,16 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/prod/1707151379649-2024-02-05T16:42:59.649Z/app.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/dev/1707230156016-2024-02-06T14:35:56.016Z/app.zip"
         },
         "Handler": "main.handler",
         "Runtime": "python3.8",
-        "FunctionName": "MeesmanAPIWrapper-prod-app",
+        "FunctionName": "MeesmanAPIWrapper-dev-app",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod"
+            "STAGE": "dev"
           }
         },
         "Role": {
@@ -206,20 +206,20 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionQ5rZlRMvirFRzybvUXP3pqXghCD1JXH0MWM4QPXwag": {
+    "AppLambdaVersionsUZ47I51uv22ENhs7PcnQkVPN8XR8nB5FhcdVleCyU": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "O+rsmLzudWYnEdwXzs5ycLXmnYCKB1mYpYzJE1wsqH8="
+        "CodeSha256": "Fx2d2taoBUjX+KfkLVYCyMknM461DTQRZIUjDQ1aEAo="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "prod-MeesmanAPIWrapper",
+        "Name": "dev-MeesmanAPIWrapper",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -243,6 +243,21 @@
         }
       }
     },
+    "ApiGatewayResourceCombined": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "combined",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
     "ApiGatewayMethodHealthcheckAny": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
@@ -250,6 +265,52 @@
         "RequestParameters": {},
         "ResourceId": {
           "Ref": "ApiGatewayResourceHealthcheck"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "AppLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCombinedAny": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCombined"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -338,16 +399,17 @@
         "AppLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1707151378062": {
+    "ApiGatewayDeployment1707230154738": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "StageName": "prod"
+        "StageName": "dev"
       },
       "DependsOn": [
         "ApiGatewayMethodHealthcheckAny",
+        "ApiGatewayMethodCombinedAny",
         "ApiGatewayMethodAny"
       ]
     },
@@ -395,7 +457,7 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-prod-ServerlessDeploymentBucketName"
+        "Name": "sls-MeesmanAPIWrapper-dev-ServerlessDeploymentBucketName"
       }
     },
     "PythonRequirementsLambdaLayerQualifiedArn": {
@@ -404,30 +466,30 @@
         "Ref": "PythonRequirementsLambdaLayer"
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-prod-PythonRequirementsLambdaLayerQualifiedArn"
+        "Name": "sls-MeesmanAPIWrapper-dev-PythonRequirementsLambdaLayerQualifiedArn"
       }
     },
     "PythonRequirementsLambdaLayerHash": {
       "Description": "Current Lambda layer hash",
       "Value": "994c828dc68d06767024efd089f631b12a672562",
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-prod-PythonRequirementsLambdaLayerHash"
+        "Name": "sls-MeesmanAPIWrapper-dev-PythonRequirementsLambdaLayerHash"
       }
     },
     "PythonRequirementsLambdaLayerS3Key": {
       "Description": "Current Lambda layer S3Key",
-      "Value": "serverless/MeesmanAPIWrapper/prod/1707148330392-2024-02-05T15:52:10.392Z/pythonRequirements.zip",
+      "Value": "serverless/MeesmanAPIWrapper/dev/1706889871214-2024-02-02T16:04:31.214Z/pythonRequirements.zip",
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-prod-PythonRequirementsLambdaLayerS3Key"
+        "Name": "sls-MeesmanAPIWrapper-dev-PythonRequirementsLambdaLayerS3Key"
       }
     },
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionQ5rZlRMvirFRzybvUXP3pqXghCD1JXH0MWM4QPXwag"
+        "Ref": "AppLambdaVersionsUZ47I51uv22ENhs7PcnQkVPN8XR8nB5FhcdVleCyU"
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-prod-AppLambdaFunctionQualifiedArn"
+        "Name": "sls-MeesmanAPIWrapper-dev-AppLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -448,12 +510,12 @@
             {
               "Ref": "AWS::URLSuffix"
             },
-            "/prod"
+            "/dev"
           ]
         ]
       },
       "Export": {
-        "Name": "sls-MeesmanAPIWrapper-prod-ServiceEndpoint"
+        "Name": "sls-MeesmanAPIWrapper-dev-ServiceEndpoint"
       }
     }
   }
