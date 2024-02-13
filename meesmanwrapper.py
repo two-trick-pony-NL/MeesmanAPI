@@ -35,7 +35,7 @@ class MeesmanClient:
             # Check if login was successful based on the presence of a specific element
             if "accountOverviewTable" not in response.text:
                 print("Login to Meesman failed. Check your credentials.")
-                return None
+                return False
                     
             return session
         except Exception as e:
@@ -93,12 +93,17 @@ class MeesmanClient:
 
             # Parse the HTML content
             soup = BeautifulSoup(response.text, 'html.parser')
+            
+            total_td = soup.find('tr', class_='total-row').find_next('tr').find('td', class_='total')
+            nog_te_beleggen_bedrag = total_td.text.strip()
+
 
             # Find the table with class 'PortfolioTable'
             table = soup.find('table', class_='PortfolioTable')
 
             # Extract data rows for the specific funds
             specific_funds = []
+
 
             for row in table.find_all('tr', class_='actual-data'):
                 # Extract the values from the row
@@ -109,7 +114,6 @@ class MeesmanClient:
                     datum = row.find('td', {'data-th': 'Valutadatum'}).text.strip()
                     waarde = row.find('td', {'data-th': 'Waarde'}).text.strip()
                     actuele_weging = row.find('td', {'data-th': 'Actuele weging'}).text.strip()
-
                     # Append the values to the specific_funds list
                     specific_funds.append({
                         'fund': fund,
@@ -117,10 +121,12 @@ class MeesmanClient:
                         'koers': koers,
                         'datum': datum,
                         'waarde': waarde,
-                        'actuele_weging': actuele_weging
+                        'actuele_weging': actuele_weging,
+                        'nog_te_beleggen_bedrag':nog_te_beleggen_bedrag
                     })
             return specific_funds
         except Exception as e:
+            print(e)
             return e
       
     def get_resultaten(self):

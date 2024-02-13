@@ -1,13 +1,9 @@
 from fastapi import FastAPI, HTTPException, Header, Depends, Form
 from meesmanwrapper import MeesmanClient
 from mangum import Mangum
-from constants import MEESMAN_PASSWORD, MEESMAN_USERNAME
 from authentication import obtain_token, obtain_credentials
 
 
-
-username = MEESMAN_USERNAME
-password = MEESMAN_PASSWORD
 
 
 app = FastAPI(
@@ -24,39 +20,21 @@ def root():
     print("Healthcheck ran")
     return "Up and running"
 
-@app.get("/combined")
-def combined():
-    meesman_client = MeesmanClient(username, password)
-    result = {
-        'waardeontwikkeling': meesman_client.get_waarde_ontwikkeling(),
-        'historic_data': meesman_client.get_historic_value(),
-        'portefeuille': meesman_client.get_portefeuille(),
-        'resultaten': meesman_client.get_resultaten(),
-        'accounts':meesman_client.get_accounts(),
-    }
-    return result
 
 @app.post("/getauthtoken")
 async def submit_credentials(username: str = Form(...), password: str = Form(...)):
-    # Process the received credentials (you can add your logic here)
     
-    # For demonstration, just print the received credentials
+    meesman_client = MeesmanClient(username, password)
+    valid = meesman_client._get_session(username, password)
     
-    print("Received Username:", username)
-    print("Received Password:", password)
+    if not valid: 
+        raise HTTPException(status_code=404, detail="No account found")
+
     token = obtain_token(username, password)
     
     # Return a success message
     return {"authtoken": token}
 
-"""@app.post("/usetoken")
-async def submit_credentials(token: str = Form(...)):
-    try: 
-        username, password = obtain_credentials(token)
-        return {'username': username, 'password':password, 'token':token}
-
-    except:
-        return {'Unauthorized': 'Status 401'}"""
     
     
 @app.get("/getmeesmandata")
