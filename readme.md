@@ -1,48 +1,64 @@
+<img src="https://github.com/two-trick-pony-NL/MeesmanUnofficialApp/assets/71013416/8fde4da7-5b18-4cfe-aadd-440d4f85ba80" height="400">
+<img src="https://github.com/two-trick-pony-NL/MeesmanUnofficialApp/assets/71013416/5c3f5419-1804-49b0-a543-ec3c8f03596f" height="400">
+<img src="https://github.com/two-trick-pony-NL/MeesmanUnofficialApp/assets/71013416/0b1d5fb8-108e-4d5a-8c61-ae43b43d55dc" height="400">
+<img src="https://github.com/two-trick-pony-NL/MeesmanUnofficialApp/assets/71013416/70ac6468-ef67-4a4b-b4e2-12ad0500c29b" height="400">
+
+
+
 # Meesman API
-This is a Python API wrapper for the Meesman Indexbeleggen platform. The basic idea is to be able to fetch your account details programatically. We run this from AWS Lambda functions as the app hardly ever needs to refresh as Meesman only invests 1x per week. 
 
-You'll be able to fetch the following information: 
-- Accounts: Lists your accounts, balance and labels
-- Resultaten: lists the results of your investments
-- Portfolio: lists your portfolio
-- Historic Data: Shows a list of dates and balances. This can be used to draw a graph
-- Value development: How your balance grew year over year
+This Python API wrapper facilitates programmatic access to the Meesman Indexbeleggen platform, allowing users to fetch account details. It's designed to run from AWS Lambda functions, leveraging the infrequent need for updates as Meesman typically invests once a week. This makes it a very cost effective way to run this API. 
 
-## How to run
-1. Check  this URL for installation instructions: https://ademoverflow.com/blog/tutorial-fastapi-aws-lambda-serverless/ 
-2. Once all permissions are set you can simply hit
-To update
-```
-sls deploy --stage staging
-```
+## Features
+You can retrieve the following information:
+- **Login:** Securely can log you in by using security Tokens stored on the client side
+- **Accounts:** Lists your accounts, balances, and labels.
+- **Resultaten:** Displays the results of your investments.
+- **Portfolio:** Lists your current portfolio.
+- **Historic Data:** Provides a list of dates and balances, useful for graphing.
+- **Value Development:** Illustrates how your balance has grown year over year.
 
-To delete
-```
-sls remove --stage staging
-```
+## Companion App:
+A companion app built with React Native is available [here](https://github.com/two-trick-pony-NL/MeesmanUnofficialApp). This app allows you to interact with the Meesman API through a user-friendly interface from a Android or iOS device in the form of an app.
 
-For development you can run
-3. run `uvicorn main:app --reload` this will start the server on port 8000 locally for development. 
 
-## To do
-- If you have multiple accounts I do not yet scrape all the data for those accounts. 
-- Create a nice frontend app. 
+## How to Run
+
+1. Follow the [installation instructions](https://ademoverflow.com/blog/tutorial-fastapi-aws-lambda-serverless/) provided in this [blog post](https://ademoverflow.com/blog/tutorial-fastapi-aws-lambda-serverless/) to set up your AWS Lambda environment.
+
+2. After setting up permissions, deploy using Serverless Framework:
+    - To update:
+      ```bash
+      sls deploy --stage staging
+      ```
+    - To delete:
+      ```bash
+      sls remove --stage staging
+      ```
+
+3. For local development, run:
+    ```bash
+    uvicorn main:app --reload
+    ```
+
+## To Do
+- Extend data scraping to handle multiple accounts. Currently only data from your 1st account is returned. Open an issue if you would like this feature. 
 
 ## Disclaimer
 
-**I am not affiliated with Meesman**
-I'm just a customer that wants to see my investments from an app and thus needed an API. 
+**I am not affiliated with Meesman.**
+This API is a personal project created by a Meesman customer to visualize investments via an app, requiring an API for data retrieval.
 
 **Use at Your Own Risk:**
-This software is provided as-is, and the use of this API wrapper is at your own risk. The code may have bugs or errors that could potentially lead to financial loss or other unintended consequences.
+The software comes as-is, and its use is at your own risk. Bugs or errors may exist that could lead to financial loss or unintended consequences.
 
 **Real Money and Real Passwords:**
-This API wrapper interacts with real financial data and requires real login credentials. Exercise caution and be aware that any actions performed using this code are associated with real money and personal account information. 
+This API interacts with real financial data and requires genuine login credentials. Exercise caution, recognizing that actions performed using this code involve real money and personal account information.
 
 **No Warranty or Guarantee:**
-There is no warranty or guarantee of any kind, expressed or implied. The author and contributors are not responsible for any damages or losses incurred through the use of this software.
+There is no warranty or guarantee, expressed or implied. The author and contributors are not responsible for any damages or losses incurred through the use of this software.
 
 **Security Considerations:**
-It is crucial to review and understand the security implications of using this software. Be sure to protect sensitive information, such as API keys and passwords. Never share your credentials or API keys publicly.
+Review and understand the security implications of using this software. Protect sensitive information such as API keys and passwords. Never share credentials or API keys publicly.
 
-By using this Meesman API Wrapper, you acknowledge and accept the risks involved. Always double-check the code, keep your credentials secure, and use it responsibly.
+By using this Meesman API Wrapper, you acknowledge and accept the risks involved. Always double-check the code, keep credentials secure, and use it responsibly.
