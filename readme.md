@@ -40,6 +40,21 @@ A companion app built with React Native is available [here](https://github.com/t
     ```bash
     uvicorn main:app --reload
     ```
+    Then to get a token:
+   - go to: localhost:8000/docs
+     <img width="556" alt="Screenshot 2024-02-13 at 13 58 45" src="https://github.com/two-trick-pony-NL/MeesmanAPI/assets/71013416/8c4ea96b-5be4-417e-a6ae-b187d94e465a">
+
+   - Use the authtoken endpoint to submit your username and password, the backend will return you a token.
+     <img width="554" alt="Screenshot 2024-02-13 at 13 59 18" src="https://github.com/two-trick-pony-NL/MeesmanAPI/assets/71013416/7a5d3a8c-deca-469d-b0f2-a25e8e57cca1">
+     This should return something like this
+     ```
+     {
+          "authtoken": "gAAAAABly2fViwFPwuqf-NEA9P-gD3QfscRomkr16KP7BfxItlETOo8pyeKTIvEvBPShV_BoVJ3N7m9c9PMTVtvpd87BdCc7vXVMymAiSWTq_t_-Als0f6w=gAAAAABly2fVRwK5Atj5ECN2dNpEjX8usFwQwnbOIGohf0sAq0pCTGxzUoWhmZE3J9pNVjyQnJ29yyoiKHqFZXsxwXO3xb291wBWVMnk1-rkVrpvEKk26ok1"
+        }
+
+     ```
+
+   - Use the token you receive in the `getmeesmandata` endpoint
 
 ## To Do
 - Extend data scraping to handle multiple accounts. Currently only data from your 1st account is returned. Open an issue if you would like this feature. 
