@@ -63,3 +63,27 @@ functions:
             parameters:
               querystrings:
                 token: true
+      - http:
+          method: any
+          path: /sendpushmessage
+          request:
+            parameters:
+              querystrings:
+                token: true
+                title: true
+                body: true
+      - http:
+          method: any
+          path: /sendpushmessagetoall
+          request:
+            parameters:
+              querystrings:
+                title: true
+                body: true
+      - http:
+          method: any
+          path: /registerpushtoken
+          request:
+            parameters:
+              querystrings:
+                token: true

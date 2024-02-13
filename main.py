@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException, Header, Depends, Form
+from fastapi import FastAPI, HTTPException, Header, Depends, Form, Query
 from meesmanwrapper import MeesmanClient
 from mangum import Mangum
 from authentication import obtain_token, obtain_credentials
+from pushnotifications import send_push_message, save_to_dynamodb, get_all_strings_from_dynamodb
 
 
 
@@ -60,6 +61,47 @@ def combined(token: str):
         
     
     
-    # Return a success message
+@app.get("/sendpushmessage")
+async def sendpushmessage(
+    token: str = Query(..., title="User Token", description="User authentication token"),
+    title: str = Query(..., title="Post Title", description="Title of the post"),
+    body: str = Query(..., title="Post Body", description="Body content of the post"),
+    ):
+    push_succesful = send_push_message(token, title, body)
+    if push_succesful:
+        result = {"status": 'success', "token": token, "title": title, "body": body}
+        return result
+    else:
+        raise HTTPException(status_code=500, detail="Push message failed to be transmitted")
+    
+@app.get("/sendpushmessagetoall")
+async def sendbulkpushmessages(
+    title: str = Query(..., title="Post Title", description="Title of the post"),
+    body: str = Query(..., title="Post Body", description="Body content of the post"),
+    ):
+    count = 0
+    known_push_tokens = get_all_strings_from_dynamodb()
+    for token in known_push_tokens:
+        count =+ 1
+        try:
+            send_push_message(token, title, body)
+        except:
+            print('Could not send to: ', token)
+    
+    result = {"status": 'success', "total messages sent": count, "title": title, "body": body}
+    return result
+
+@app.get("/registerpushtoken")
+async def registerpushtoken(
+    token: str = Query(..., title="Push Token", description="The push token of a devide "),
+    ):
+    save_to_dynamodb(token)
+    result = {"status": 'success', 'token':token}
+    return result
+            
+    
+        
+
+        
 
 handler = Mangum(app)

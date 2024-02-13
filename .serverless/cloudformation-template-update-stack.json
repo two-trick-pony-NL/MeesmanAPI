@@ -178,7 +178,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/dev/1707813330459-2024-02-13T08:35:30.459Z/app.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/dev/1707857973981-2024-02-13T20:59:33.981Z/app.zip"
         },
         "Handler": "main.handler",
         "Runtime": "python3.8",
@@ -206,14 +206,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionFrdt2lEG5x1jj2obyWy9CGVweKZoioQhgyuA0u3peM": {
+    "AppLambdaVersionzCdNlotrXaBUUEk9RmGxvsATkqxxD2Q6FS3PFSzC7e4": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "/KpglWjN2aca5oUTDFSTMD4XSILUnvOH4Mv2p3P4fsI="
+        "CodeSha256": "Ww4Gi5tplqdckBxQIYNWCu9FDoFt0+oQMDOvue1dAoI="
       }
     },
     "ApiGatewayRestApi": {
@@ -283,6 +283,51 @@
           ]
         },
         "PathPart": "getmeesmandata",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceSendpushmessage": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "sendpushmessage",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceSendpushmessagetoall": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "sendpushmessagetoall",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceRegisterpushtoken": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "registerpushtoken",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -477,6 +522,162 @@
         "AppLambdaPermissionApiGateway"
       ]
     },
+    "ApiGatewayMethodSendpushmessageAny": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "RequestParameters": {
+          "method.request.querystring.token": true,
+          "method.request.querystring.title": true,
+          "method.request.querystring.body": true
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSendpushmessage"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayMeesmanAPIWrapperRequestValidator"
+        }
+      },
+      "DependsOn": [
+        "AppLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodSendpushmessagetoallAny": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "RequestParameters": {
+          "method.request.querystring.title": true,
+          "method.request.querystring.body": true
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceSendpushmessagetoall"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayMeesmanAPIWrapperRequestValidator"
+        }
+      },
+      "DependsOn": [
+        "AppLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodRegisterpushtokenAny": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "RequestParameters": {
+          "method.request.querystring.token": true
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceRegisterpushtoken"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayMeesmanAPIWrapperRequestValidator"
+        }
+      },
+      "DependsOn": [
+        "AppLambdaPermissionApiGateway"
+      ]
+    },
     "ApiGatewayMeesmanAPIWrapperRequestValidator": {
       "Type": "AWS::ApiGateway::RequestValidator",
       "Properties": {
@@ -488,7 +689,7 @@
         "Name": "MeesmanAPIWrapper-dev | Validate request body and querystring parameters"
       }
     },
-    "ApiGatewayDeployment1707813328003": {
+    "ApiGatewayDeployment1707857972197": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -500,7 +701,10 @@
         "ApiGatewayMethodHealthcheckAny",
         "ApiGatewayMethodCombinedAny",
         "ApiGatewayMethodGetauthtokenAny",
-        "ApiGatewayMethodGetmeesmandataAny"
+        "ApiGatewayMethodGetmeesmandataAny",
+        "ApiGatewayMethodSendpushmessageAny",
+        "ApiGatewayMethodSendpushmessagetoallAny",
+        "ApiGatewayMethodRegisterpushtokenAny"
       ]
     },
     "AppLambdaPermissionApiGateway": {
@@ -576,7 +780,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionFrdt2lEG5x1jj2obyWy9CGVweKZoioQhgyuA0u3peM"
+        "Ref": "AppLambdaVersionzCdNlotrXaBUUEk9RmGxvsATkqxxD2Q6FS3PFSzC7e4"
       },
       "Export": {
         "Name": "sls-MeesmanAPIWrapper-dev-AppLambdaFunctionQualifiedArn"
