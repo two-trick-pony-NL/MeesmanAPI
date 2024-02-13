@@ -10,6 +10,16 @@ provider:
   runtime: python3.8
   region: eu-central-1
   stage: ${opt:stage, "dev"}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "*"
 
 plugins:
   - serverless-python-requirements

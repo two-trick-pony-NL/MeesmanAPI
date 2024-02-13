@@ -134,6 +134,18 @@
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MeesmanAPIWrapper-dev*:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Scan",
+                    "dynamodb:Query",
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": "*"
                 }
               ]
             }
@@ -178,7 +190,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MeesmanAPIWrapper/dev/1707857973981-2024-02-13T20:59:33.981Z/app.zip"
+          "S3Key": "serverless/MeesmanAPIWrapper/dev/1707858365725-2024-02-13T21:06:05.725Z/app.zip"
         },
         "Handler": "main.handler",
         "Runtime": "python3.8",
@@ -206,14 +218,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionzCdNlotrXaBUUEk9RmGxvsATkqxxD2Q6FS3PFSzC7e4": {
+    "AppLambdaVersionp6ZCOoCTgQ7GlzYNhL8z3ASNmetOzvJQ1IOh08205iQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "Ww4Gi5tplqdckBxQIYNWCu9FDoFt0+oQMDOvue1dAoI="
+        "CodeSha256": "1y/zqNhEjIkTTZk2LUVKaKngXznD4Un2QH0yQu42Exs="
       }
     },
     "ApiGatewayRestApi": {
@@ -689,7 +701,7 @@
         "Name": "MeesmanAPIWrapper-dev | Validate request body and querystring parameters"
       }
     },
-    "ApiGatewayDeployment1707857972197": {
+    "ApiGatewayDeployment1707858364244": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -780,7 +792,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionzCdNlotrXaBUUEk9RmGxvsATkqxxD2Q6FS3PFSzC7e4"
+        "Ref": "AppLambdaVersionp6ZCOoCTgQ7GlzYNhL8z3ASNmetOzvJQ1IOh08205iQ"
       },
       "Export": {
         "Name": "sls-MeesmanAPIWrapper-dev-AppLambdaFunctionQualifiedArn"
