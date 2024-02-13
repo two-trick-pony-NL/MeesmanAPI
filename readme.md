@@ -64,9 +64,7 @@ A companion app built with React Native is available [here](https://github.com/t
    - Use the token you receive in the `getmeesmandata` endpoint, that will return data with this shape: 
 
 ```
-Certainly! Here's the updated JSON with random values:
 
-```json
 {
   "waardeontwikkeling": [
     {
