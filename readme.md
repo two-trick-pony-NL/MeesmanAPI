@@ -61,7 +61,347 @@ A companion app built with React Native is available [here](https://github.com/t
 
      ```
 
-   - Use the token you receive in the `getmeesmandata` endpoint
+   - Use the token you receive in the `getmeesmandata` endpoint, that will return data with this shape: 
+
+```
+Certainly! Here's the updated JSON with random values:
+
+```json
+{
+  "waardeontwikkeling": [
+    {
+      "columns": [
+        "2024"
+      ],
+      "data": [
+        [
+          "Beginwaarde",
+          "€ 20,932"
+        ],
+        [
+          "Inleg",
+          "€ 8,765"
+        ],
+        [
+          "Onttrekkingen",
+          "€ 37"
+        ],
+        [
+          "Eindwaarde",
+          "€ 53,718"
+        ],
+        [
+          "Rendement per jaar",
+          "1.2%"
+        ],
+        [
+          "Rendement gehele periode",
+          "4.8%"
+        ],
+        [
+          "Fondskosten",
+          "€ 14"
+        ],
+        [
+          "Transactiekosten",
+          "€ 28"
+        ]
+      ]
+    },
+    {
+      "columns": [
+        "2023"
+      ],
+      "data": [
+        [
+          "Beginwaarde",
+          "€ 0"
+        ],
+        [
+          "Inleg",
+          "€ 30,455"
+        ],
+        [
+          "Onttrekkingen",
+          "€ 0"
+        ],
+        [
+          "Eindwaarde",
+          "€ 20,932"
+        ],
+        [
+          "Rendement per jaar",
+          "2.6%"
+        ],
+        [
+          "Rendement gehele periode",
+          "2.6%"
+        ],
+        [
+          "Fondskosten",
+          "€ 19"
+        ],
+        [
+          "Transactiekosten",
+          "€ 51"
+        ]
+      ]
+    }
+  ],
+  "historic_data": [
+    [
+      [
+        1695340800000,
+        0
+      ],
+      [
+        1695945600000,
+        0
+      ],
+      [
+        1696291200000,
+        15
+      ],
+      [
+        1696550400000,
+        7256
+      ],
+      [
+        1697155200000,
+        33433
+      ],
+      [
+        1697760000000,
+        33593
+      ],
+      [
+        1698364800000,
+        33753
+      ],
+      [
+        1698973200000,
+        33913
+      ],
+      [
+        1699578000000,
+        34073
+      ],
+      [
+        1700182800000,
+        34233
+      ],
+      [
+        1700787600000,
+        34233
+      ],
+      [
+        1701046800000,
+        34493
+      ],
+      [
+        1701392400000,
+        34653
+      ],
+      [
+        1701997200000,
+        34813
+      ],
+      [
+        1702256400000,
+        34813
+      ],
+      [
+        1702602000000,
+        34973
+      ],
+      [
+        1703638800000,
+        35133
+      ],
+      [
+        1703984400000,
+        35133
+      ],
+      [
+        1704416400000,
+        49957
+      ],
+      [
+        1705021200000,
+        50117
+      ],
+      [
+        1705626000000,
+        50277
+      ],
+      [
+        1706230800000,
+        50437
+      ],
+      [
+        1706835600000,
+        50597
+      ],
+      [
+        1707440400000,
+        50597
+      ]
+    ],
+    [
+      [
+        1695340800000,
+        0
+      ],
+      [
+        1695945600000,
+        0
+      ],
+      [
+        1696291200000,
+        15
+      ],
+      [
+        1696550400000,
+        7233
+      ],
+      [
+        1697155200000,
+        33364
+      ],
+      [
+        1697760000000,
+        32218
+      ],
+      [
+        1698364800000,
+        31821
+      ],
+      [
+        1698973200000,
+        33377
+      ],
+      [
+        1699578000000,
+        33877
+      ],
+      [
+        1700182800000,
+        34407
+      ],
+      [
+        1700787600000,
+        34412
+      ],
+      [
+        1701046800000,
+        34629
+      ],
+      [
+        1701392400000,
+        35388
+      ],
+      [
+        1701997200000,
+        35793
+      ],
+      [
+        1702256400000,
+        35793
+      ],
+      [
+        1702602000000,
+        36347
+      ],
+      [
+        1703638800000,
+        36486
+      ],
+      [
+        1703984400000,
+        36656
+      ],
+      [
+        1704416400000,
+        51184
+      ],
+      [
+        1705021200000,
+        52083
+      ],
+      [
+        1705626000000,
+        52621
+      ],
+      [
+        1706230800000,
+        53795
+      ],
+      [
+        1706835600000,
+        54886
+      ],
+      [
+        1707440400000,
+        54897
+      ]
+    ]
+  ],
+  "portefeuille": [
+    {
+      "fund": "Aandelen Wereldwijd Totaal",
+      "aantal": "725.6831",
+      "koers": "€ 63.9127",
+      "
+
+datum": "2 februari 2024",
+      "waarde": "€ 46,256.76",
+      "actuele_weging": "78%",
+      "nog_te_beleggen_bedrag": "€ 117.83"
+    },
+    {
+      "fund": "Obligaties Wereldwijd (wordt gesloten)",
+      "aantal": "183.0916",
+      "koers": "€ 40.6847",
+      "datum": "9 februari 2024",
+      "waarde": "€ 7,462.91",
+      "actuele_weging": "22%",
+      "nog_te_beleggen_bedrag": "€ 117.83"
+    }
+  ],
+  "resultaten": [
+    {
+      "fund": "Aandelen Wereldwijd Totaal",
+      "aanschafwaarde": "€ 33,264.00",
+      "huidige_waarde": "€ 46,256.76",
+      "ongerealiseerd_resultaat": "€ 12,992.76"
+    },
+    {
+      "fund": "Obligaties Wereldwijd (wordt gesloten)",
+      "aanschafwaarde": "€ 6,561.00",
+      "huidige_waarde": "€ 7,462.91",
+      "ongerealiseerd_resultaat": "€ 901.91"
+    }
+  ],
+  "accounts": [
+    {
+      "22309384": {
+        "label": "Vakantiefonds",
+        "euro_value": "53,718"
+      }
+    },
+    {
+      "22403282": {
+        "label": "Investeringspotje",
+        "euro_value": "2,580"
+      }
+    }
+  ]
+}
+```
+
+Feel free to use these random values for testing purposes.
+
+```
 
 ## To Do
 - Extend data scraping to handle multiple accounts. Currently only data from your 1st account is returned. Open an issue if you would like this feature. 
