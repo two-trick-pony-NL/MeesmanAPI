@@ -37,14 +37,16 @@ A companion app built with React Native is available [here](https://github.com/t
       ```
 
 3. For local development, run:
-    ```bash
+   
+    ```
     uvicorn main:app --reload
     ```
+    
     Then to get a token:
    - go to: localhost:8000/docs
 
   
-          <img width="556" alt="Screenshot 2024-02-13 at 13 58 45" src="https://github.com/two-trick-pony-NL/MeesmanAPI/assets/71013416/8c4ea96b-5be4-417e-a6ae-b187d94e465a">
+<img width="556" alt="Screenshot 2024-02-13 at 13 58 45" src="https://github.com/two-trick-pony-NL/MeesmanAPI/assets/71013416/8c4ea96b-5be4-417e-a6ae-b187d94e465a">
 
 
    - Use the authtoken endpoint to submit your username and password, the backend will return you a token.
