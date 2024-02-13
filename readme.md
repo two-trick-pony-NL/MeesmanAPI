@@ -397,9 +397,7 @@ datum": "2 februari 2024",
 }
 ```
 
-Feel free to use these random values for testing purposes.
 
-```
 
 ## To Do
 - Extend data scraping to handle multiple accounts. Currently only data from your 1st account is returned. Open an issue if you would like this feature. 
