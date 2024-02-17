@@ -207,7 +207,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/MeesmanAPIWrapper/dev/1707858365725-2024-02-13T21:06:05.725Z/app.zip"
+                "S3Key": "serverless/MeesmanAPIWrapper/dev/1708157290817-2024-02-17T08:08:10.817Z/app.zip"
               },
               "Handler": "main.handler",
               "Runtime": "python3.8",
@@ -235,14 +235,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionp6ZCOoCTgQ7GlzYNhL8z3ASNmetOzvJQ1IOh08205iQ": {
+          "AppLambdaVersionw7JABEB9UiJrJmzhS6VLJYFDo9A5LYIaQJhlmGLWRM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "1y/zqNhEjIkTTZk2LUVKaKngXznD4Un2QH0yQu42Exs="
+              "CodeSha256": "fFkOQ2zHWW3VafjzESiuWcZJIAPlFQKhvH6ZTvfZs7A="
             }
           },
           "ApiGatewayRestApi": {
@@ -504,9 +504,7 @@
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
               "HttpMethod": "ANY",
-              "RequestParameters": {
-                "method.request.querystring.token": true
-              },
+              "RequestParameters": {},
               "ResourceId": {
                 "Ref": "ApiGatewayResourceGetmeesmandata"
               },
@@ -542,10 +540,7 @@
                   ]
                 }
               },
-              "MethodResponses": [],
-              "RequestValidatorId": {
-                "Ref": "ApiGatewayMeesmanAPIWrapperRequestValidator"
-              }
+              "MethodResponses": []
             },
             "DependsOn": [
               "AppLambdaPermissionApiGateway"
@@ -718,7 +713,7 @@
               "Name": "MeesmanAPIWrapper-dev | Validate request body and querystring parameters"
             }
           },
-          "ApiGatewayDeployment1707858364244": {
+          "ApiGatewayDeployment1708157289201": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -809,7 +804,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionp6ZCOoCTgQ7GlzYNhL8z3ASNmetOzvJQ1IOh08205iQ"
+              "Ref": "AppLambdaVersionw7JABEB9UiJrJmzhS6VLJYFDo9A5LYIaQJhlmGLWRM"
             },
             "Export": {
               "Name": "sls-MeesmanAPIWrapper-dev-AppLambdaFunctionQualifiedArn"
@@ -997,11 +992,6 @@
             "http": {
               "method": "any",
               "path": "getmeesmandata",
-              "request": {
-                "parameters": {
-                  "method.request.querystring.token": true
-                }
-              },
               "integration": "AWS_PROXY"
             }
           },
@@ -1050,7 +1040,7 @@
         "memory": 1024,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionp6ZCOoCTgQ7GlzYNhL8z3ASNmetOzvJQ1IOh08205iQ"
+        "versionLogicalId": "AppLambdaVersionw7JABEB9UiJrJmzhS6VLJYFDo9A5LYIaQJhlmGLWRM"
       }
     },
     "configValidationMode": "warn",
@@ -1060,7 +1050,7 @@
       "package": {
         "individually": true,
         "artifactsS3KeyDirname": "serverless/MeesmanAPIWrapper/dev/code-artifacts",
-        "artifactDirectoryName": "serverless/MeesmanAPIWrapper/dev/1707858365725-2024-02-13T21:06:05.725Z"
+        "artifactDirectoryName": "serverless/MeesmanAPIWrapper/dev/1708157290817-2024-02-17T08:08:10.817Z"
       },
       "useDotenv": true,
       "provider": {
@@ -1092,7 +1082,7 @@
   },
   "package": {
     "individually": true,
-    "artifactDirectoryName": "serverless/MeesmanAPIWrapper/dev/1707858365725-2024-02-13T21:06:05.725Z",
+    "artifactDirectoryName": "serverless/MeesmanAPIWrapper/dev/1708157290817-2024-02-17T08:08:10.817Z",
     "artifact": ""
   }
 }

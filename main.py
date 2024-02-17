@@ -24,22 +24,24 @@ def root():
 
 @app.post("/getauthtoken")
 async def submit_credentials(username: str = Form(...), password: str = Form(...)):
-    
+
     meesman_client = MeesmanClient(username, password)
     valid = meesman_client._get_session(username, password)
-    
-    if not valid: 
+
+    if not valid:
         raise HTTPException(status_code=404, detail="No account found")
 
     token = obtain_token(username, password)
-    
+
     # Return a success message
     return {"authtoken": token}
 
-    
-    
+
+
 @app.get("/getmeesmandata")
-def combined(token: str):
+def get_meesman_data(
+    token: str = Header(..., convert_underscores=True),
+):
     # Validate the token or perform any necessary checks
     print('This token', token)
     try:
@@ -57,11 +59,11 @@ def combined(token: str):
         'accounts': meesman_client.get_accounts(),
     }
     return result
-        
-        
-    
-    
-@app.get("/sendpushmessage")
+
+
+
+
+@app.post("/sendpushmessage")
 async def sendpushmessage(
     token: str = Query(..., title="User Token", description="User authentication token"),
     title: str = Query(..., title="Post Title", description="Title of the post"),
@@ -73,35 +75,40 @@ async def sendpushmessage(
         return result
     else:
         raise HTTPException(status_code=500, detail="Push message failed to be transmitted")
-    
-@app.get("/sendpushmessagetoall")
+
+@app.post("/sendpushmessagetoall")
 async def sendbulkpushmessages(
     title: str = Query(..., title="Post Title", description="Title of the post"),
     body: str = Query(..., title="Post Body", description="Body content of the post"),
-    ):
+    apikey: str = Header(..., convert_underscores=True),
+):
+    KEY_FILE_PATH = "authentication.key"
+    with open(KEY_FILE_PATH, "rb") as key_file:
+        stored_api_key = key_file.read()
+    stored_api_key = stored_api_key.decode()
+    if apikey != stored_api_key:
+        raise HTTPException(status_code=401, detail="This API key does not have permission to send Push Notifications")
+
     count = 0
     known_push_tokens = get_all_strings_from_dynamodb()
-    for token in known_push_tokens:
-        count =+ 1
+    for push_token in known_push_tokens:
+        count += 1
         try:
-            send_push_message(token, title, body)
+            send_push_message(push_token, title, body)
         except:
-            print('Could not send to: ', token)
-    
+            print('Could not send to: ', push_token)
+
     result = {"status": 'success', "total messages sent": count, "title": title, "body": body}
     return result
 
-@app.get("/registerpushtoken")
+@app.post("/registerpushtoken")
 async def registerpushtoken(
-    token: str = Query(..., title="Push Token", description="The push token of a devide "),
-    ):
+    token: str = Query(..., title="Push Token", description="The push token of a device"),
+):
     save_to_dynamodb(token)
-    result = {"status": 'success', 'token':token}
+    result = {"status": 'success', 'token': token}
     return result
-            
-    
-        
 
-        
+
 
 handler = Mangum(app)

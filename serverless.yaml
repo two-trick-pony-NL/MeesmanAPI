@@ -69,10 +69,9 @@ functions:
       - http:
           method: any
           path: /getmeesmandata
-          request:
-            parameters:
-              querystrings:
-                token: true
+          response:
+            headers:
+              Content-Type: "'application/json'"
       - http:
           method: any
           path: /sendpushmessage
