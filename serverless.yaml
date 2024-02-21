@@ -43,6 +43,7 @@ functions:
         - "constants.py"
         - "authentication.py"
         - "authentication.key"
+        - "analytics.py"
       exclude:
         - "requirements.txt"
         - "package.json"
