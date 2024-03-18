@@ -2,8 +2,12 @@ from bs4 import BeautifulSoup
 import re
 import lambda_requests as requests
 
+#We define fund names that Meesman Has: https://www.meesman.nl/onze-fondsen/
+valid_fund_names = ['Aandelen', 'Obligaties', 'Rentefonds', 'switchopdracht']
+
+
 class MeesmanClient:
-    def __init__(self, username, password):        
+    def __init__(self, username, password):
         self.session = self._get_session(username, password)
         self.username = username
         self.password = password
@@ -28,7 +32,7 @@ class MeesmanClient:
 
             # Create a session
             session = requests.Session()
-            
+
             # Login
             response = session.post(url_login, headers=headers, data=payload)
 
@@ -36,14 +40,14 @@ class MeesmanClient:
             if "accountOverviewTable" not in response.text:
                 print("Login to Meesman failed. Check your credentials.")
                 return False
-                    
+
             return session
         except Exception as e:
             return e
-    
+
     def get_accounts(self):
         print("Obtaining accounts")
-        try: 
+        try:
             # Use the session to fetch the data from the authenticated page
             url = "https://mijn.meesman.nl"
             response = self.session.get(url)
@@ -68,7 +72,7 @@ class MeesmanClient:
                 label = row.find('span', class_='accountLabel__editButtonText').text.strip()
                 waarde = row.find('td', class_='right-aligned').find('span', class_='currency-symbol').text + \
                         row.find('td', class_='right-aligned').find('a').text.strip()
-                
+
                 waarde = waarde.replace('\xa0', '').replace('€', '')
 
                 # Append the values to the data rows
@@ -77,15 +81,15 @@ class MeesmanClient:
             return data_rows
         except Exception as e:
             return e
-        
-    
+
+
     def get_portefeuille(self):
         print("Obtaining portfolio")
-        try: 
+        try:
             # Use the session to fetch the data from the authenticated page
             url = "https://mijn.meesman.nl/portefeuille"
             response = self.session.get(url)
-            
+
             # Check if the request was successful
             if response.status_code != 200:
                 print(f"Failed to fetch data. Status code: {response.status_code}")
@@ -93,7 +97,7 @@ class MeesmanClient:
 
             # Parse the HTML content
             soup = BeautifulSoup(response.text, 'html.parser')
-            
+
             total_td = soup.find('tr', class_='total-row').find_next('tr').find('td', class_='total')
             nog_te_beleggen_bedrag = total_td.text.strip()
 
@@ -108,7 +112,7 @@ class MeesmanClient:
             for row in table.find_all('tr', class_='actual-data'):
                 # Extract the values from the row
                 fund = row.find('td', class_='name').text.strip()
-                if fund in ['Aandelen Wereldwijd Totaal', 'Obligaties Wereldwijd (wordt gesloten)']:
+                if any(keyword.lower() in fund.lower() for keyword in valid_fund_names):
                     aantal = row.find('td', {'data-th': 'Aantal'}).text.strip()
                     koers = row.find('td', {'data-th': 'Koers'}).text.strip()
                     datum = row.find('td', {'data-th': 'Valutadatum'}).text.strip()
@@ -128,10 +132,10 @@ class MeesmanClient:
         except Exception as e:
             print(e)
             return e
-      
+
     def get_resultaten(self):
         print("Getting results")
-        try: 
+        try:
             # Use the session to fetch the data from the authenticated page
             url = "https://mijn.meesman.nl/resultaten"
             response = self.session.get(url)
@@ -168,7 +172,7 @@ class MeesmanClient:
             return data_rows
         except Exception as e:
             return e
-    
+
     def get_historic_value(self):
         print("Obtaining historic values")
         try:
@@ -193,7 +197,7 @@ class MeesmanClient:
             return historic_values_list
         except Exception as e:
             return e
-    
+
     def get_waarde_ontwikkeling(self):
         print("Obtaining value development")
         try:
